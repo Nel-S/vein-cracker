@@ -14,7 +14,7 @@ std::set<uint64_t> results;
 
 // Returns a population seed.
 // TODO: Combine with Random in RNG.cuh
-template <int64_t N = 0> [[nodiscard]] uint64_t getPopulationSeed(const uint64_t structureSeed, const int32_t x, const int32_t z, const Version version) {
+template <int64_t N = 0> [[nodiscard]] uint64_t getPopulationSeed(uint64_t structureSeed, int32_t x, int32_t z, Version version) {
 	Random random(structureSeed);
 	random.skip<N>();
 	uint64_t a, b;
@@ -28,7 +28,7 @@ template <int64_t N = 0> [[nodiscard]] uint64_t getPopulationSeed(const uint64_t
 	return (static_cast<uint64_t>(x) * a + static_cast<uint64_t>(z) * b ^ structureSeed) & LCG::MASK;
 }
 
-constexpr [[nodiscard]] InclusiveRange<uint64_t> getPopulationCallsRange(/*const Biome biome,*/ const Version version) {
+constexpr [[nodiscard]] InclusiveRange<uint64_t> getPopulationCallsRange(Version version/*, Biome biome*/) {
 	if (Version::v1_10_through_v1_12_2 < version) return {UINT64_C(0), UINT64_C(1)};
 	switch (version) {
 		case Version::v1_8_9:
@@ -39,7 +39,7 @@ constexpr [[nodiscard]] InclusiveRange<uint64_t> getPopulationCallsRange(/*const
 
 /* Returns the list of, and number of, possible offsets related to population seeds.
    These are possible displacements that arise from the population seed formula turning both nextLongs into odd integers. 1.12- rounds the nextLongs, meaning there are up to 3^2 = 9 possible combinations that could have occurred internally; 1.13+ sets the last bit to 1, meaning there are up to 2^2 = 4 possible combinations.*/
-void getInternalPopulationOffsets(uint64_t *offsets, uint32_t *offsetsLength, const int32_t x, const int32_t z, const Version version) {
+void getInternalPopulationOffsets(uint64_t *const offsets, uint32_t *const offsetsLength, int32_t x, int32_t z, Version version) {
 	for (uint64_t i = 0; i < 2 + (version <= Version::v1_10_through_v1_12_2); ++i) {
 		for (uint64_t j = 0; j < 2 + (version <= Version::v1_10_through_v1_12_2); ++j) {
 			uint64_t offset = static_cast<uint64_t>(x) * i + static_cast<uint64_t>(z) * j;
@@ -58,7 +58,7 @@ void getInternalPopulationOffsets(uint64_t *offsets, uint32_t *offsetsLength, co
 
 /* Recursively derives the structure seeds from the population seeds.
    If successful, the results are placed in POPULATION_REVERSAL_OUTPUT[] and totalStructureSeedsThisWorkerSet is incremented.*/
-void reversePopulationSeedRecursiveFallback(const uint64_t offset, const uint64_t partialStructureSeed, const int32_t numberOfKnownBitsInStructureSeed, const uint64_t populationSeed, const int32_t x, const int32_t z, const Version version) {
+void reversePopulationSeedRecursiveFallback(uint64_t offset, uint64_t partialStructureSeed, int32_t numberOfKnownBitsInStructureSeed, uint64_t populationSeed, int32_t x, int32_t z, Version version) {
 	// First tests if the last (numberOfKnownBitsInStructureSeed - 16) bits of the structure seed, when placed into the population seed formula and combined with the specified offset, produce the last (numberOfKnownBitsInStructureSeed - 16) bits of the true population seed. If not, quit.
 	if (getLowestBitsOf((static_cast<uint64_t>(x) * (((partialStructureSeed ^ LCG::MULTIPLIER) * FORWARD_2_MULTIPLIER + FORWARD_2_ADDEND) >> 16) + static_cast<uint64_t>(z) * (((partialStructureSeed ^ LCG::MULTIPLIER) * FORWARD_4_MULTIPLIER + FORWARD_4_ADDEND) >> 16) + offset) ^ partialStructureSeed ^ populationSeed, numberOfKnownBitsInStructureSeed - 16)) return;
 	// Otherwise, if the full structure seed has been determined, test if it satisfies the full population seed formula; if so add it to the list, then quit regardless
@@ -75,7 +75,7 @@ void reversePopulationSeedRecursiveFallback(const uint64_t offset, const uint64_
 	reversePopulationSeedRecursiveFallback(offset, partialStructureSeed + twoToThePowerOf(numberOfKnownBitsInStructureSeed), numberOfKnownBitsInStructureSeed + 1, populationSeed, x, z, version);
 }
 
-void reversePopulationSeed(const uint64_t populationSeed, const int32_t x, const int32_t z, const Version version) {
+void reversePopulationSeed(uint64_t populationSeed, int32_t x, int32_t z, Version version) {
 	// If x = z = 0, the structure seed is just the population seed
 	if (!x && !z) {
 		// uint64_t resultIndex = atomicAdd(&storageArraySize, 1);

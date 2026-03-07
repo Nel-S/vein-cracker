@@ -94,7 +94,7 @@ struct InputData {
 	VeinStates defaultStateOutsideLayout;
 
 	// constexpr InputData() : version(), material(), biome(), coordinate() {}
-	// constexpr InputData(const Version version, const Material material, const Coordinate coordinate) : version(version), material(material), biome(), coordinate() {}
+	// constexpr InputData(Version version, Material material, const Coordinate coordinate) : version(version), material(material), biome(), coordinate() {}
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -6,13 +6,13 @@
 
 // Returns the range of the world's y-axis
 // TODO: Add Nether?
-constexpr [[nodiscard]] InclusiveRange<int32_t> getWorldYRange(const Version version) {
+constexpr [[nodiscard]] InclusiveRange<int32_t> getWorldYRange(Version version) {
 	if (version <= Version::Beta_1_8_through_v1_2) return {0, 127};
 	return {0, 255};
 	// TODO: Will need updating if 1.18+ is ever implemented (if it can even be implemented)
 }
 
-constexpr [[nodiscard]] int32_t getVeinSize(const Material material, const Version version) {
+constexpr [[nodiscard]] int32_t getVeinSize(Material material, Version version) {
 	switch (material) {
 		case Material::Dirt:
 		case Material::Gravel:
@@ -114,7 +114,7 @@ constexpr [[nodiscard]] int32_t getVeinSize(const Material material, const Versi
 	}
 }
 
-constexpr [[nodiscard]] InclusiveRange<int32_t> getVeinYRange(const Material material, const Version version) {
+constexpr [[nodiscard]] InclusiveRange<int32_t> getVeinYRange(Material material, Version version) {
 	switch (material) {
 		case Material::Dirt:
 		case Material::Gravel:
@@ -211,7 +211,7 @@ constexpr [[nodiscard]] InclusiveRange<int32_t> getVeinYRange(const Material mat
 	}
 }
 
-constexpr [[nodiscard]] bool veinUsesTriangularDistribution(const Material material, const Version version) {
+constexpr [[nodiscard]] bool veinUsesTriangularDistribution(Material material, Version version) {
 	switch (material) {
 		case Material::Dirt:
 		case Material::Gravel:
@@ -289,8 +289,97 @@ constexpr [[nodiscard]] bool veinUsesTriangularDistribution(const Material mater
 	}
 }
 
-// Only confirmed for 1.12.2-
-constexpr [[nodiscard]] InclusiveRange<int32_t> getVeinAdvancementsRange(const Material material, const Version version) {
+constexpr [[nodiscard]] int32_t getVeinAttemptCount(Material material, Version version) {
+	switch (material) {
+		case Material::Dirt:
+			// Infdev 20100617-1-(?) didn't generate dirt
+			// if (version <= ExperimentalVersion::Infdev_20100617_1) throw std::invalid_argument("Invalid version provided.");
+			if (version <= Version::v1_7_2_through_v1_7_10) return 20;
+			if (version <= Version::v1_10_through_v1_12_2) return 10;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 10;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case Material::Gravel:
+			// Infdev 20100617-1-(?) didn't generate gravel
+			// if (version <= ExperimentalVersion::Infdev_20100617_1) throw std::invalid_argument("Invalid version provided.");
+			if (version <= Version::v1_7_2_through_v1_7_10) return 10;
+			if (version <= Version::v1_10_through_v1_12_2) return 8;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 8;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case ExperimentalMaterial::Granite:
+		case ExperimentalMaterial::Diorite:
+		case ExperimentalMaterial::Andesite:
+			// 1.7.10- doesn't generate granite, diorite, or andesite
+			if (version <= Version::v1_7_2_through_v1_7_10) throw std::invalid_argument("Invalid version provided.");
+			if (version <= Version::v1_10_through_v1_12_2) return 10;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 10;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case Material::Coal:
+			if (version <= Version::v1_10_through_v1_12_2) return 20;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 20;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case Material::Iron:
+			// if (version <= ExperimentalVersion::Infdev_20100325) return 10;
+			if (version <= Version::v1_10_through_v1_12_2) return 20;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 20;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case Material::Gold:
+			// TODO: Checked if nextInt(2) == 0 prior to attempt. Use to filter out half of all states?
+			if (version <= ExperimentalVersion::Infdev_20100625_1_through_Alpha_1_0_0) return 1;
+			if (version <= Version::v1_10_through_v1_12_2) return 2;
+			switch (version) {
+				// TODO: 1.13+ Badlands has extra gold (ORE_GOLD_EXTRA)
+				case ExperimentalVersion::v1_16_5:
+					return 2;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case Material::Redstone:
+			// Alpha 1.0.0- didn't generate redstone
+			if (version <= ExperimentalVersion::Infdev_20100625_1_through_Alpha_1_0_0) throw std::invalid_argument("Invalid version provided.");
+			if (version <= Version::v1_10_through_v1_12_2) return 8;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 8;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case Material::Diamond:
+			// TODO: Checked if nextInt(4) == 0 prior to attempt. Use to filter out 3/4ths of all states?
+			if (version <= ExperimentalVersion::Infdev_20100625_1_through_Alpha_1_0_0) return 1;
+			if (version <= Version::v1_10_through_v1_12_2) return 1;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 1;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		case ExperimentalMaterial::Lapis_Lazuli:
+			// Beta 1.1_02- doesn't generate lapis
+			if (version <= ExperimentalVersion::Alpha_1_0_1_01_through_Beta_1_1_02) throw std::invalid_argument("Invalid version provided.");
+			if (version <= Version::v1_10_through_v1_12_2) return 1;
+			switch (version) {
+				case ExperimentalVersion::v1_16_5:
+					return 1;
+				default: throw std::invalid_argument("Invalid version provided.");
+			}
+		default: throw std::invalid_argument("Invalid material provided.");
+	}
+}
+
+constexpr [[nodiscard]] InclusiveRange<int32_t> getVeinAdvancementsRange(Material material, Version version) {
+	if (version > Version::v1_10_through_v1_12_2) throw std::invalid_argument("Invalid version provided.");
 	int32_t veinSize = getVeinSize(material, version);
 	InclusiveRange<int32_t> veinYRange = getVeinYRange(material, version);
 	bool isTriangularDistribution = veinUsesTriangularDistribution(material, version);
@@ -316,7 +405,7 @@ constexpr double MAX_DOUBLE_IN_RANGE = 0.999999999999999;
 
 // The maximum number of blocks away the vein's blocks can be placed from its generation point.
 // First is farthest in the negative directions; second is farthest in the positive directions.
-constexpr [[nodiscard]] Pair<Coordinate> getMaxVeinBlockDisplacement(const Material material, const Version version, const Coordinate &generationPoint) {
+constexpr [[nodiscard]] Pair<Coordinate> getMaxVeinBlockDisplacement(Material material, Version version, const Coordinate &generationPoint) {
 	double veinSize = static_cast<double>(getVeinSize(material, version));
 	/* In 1.7.9, the maximum interpoland is 1.; in 1.8.9, it's 1. - 1./veinSize.*/
 	double commonHorizontalMinTerm = static_cast<double>(Version::v1_8_through_v1_9_4 <= version)/4. - veinSize*(4 + MAX_DOUBLE_IN_RANGE*(constexprSin((1. - static_cast<double>(Version::v1_8_through_v1_9_4 <= version)/veinSize)*PI) + 1))/32. - 0.5;
@@ -348,7 +437,7 @@ constexpr [[nodiscard]] Pair<Coordinate> getMaxVeinBlockDisplacement(const Mater
 
 // The maximum number of blocks away the vein's blocks can be placed from its generation point, *excluding the Beta 1.5.02- bug*.
 // First is farthest in the negative directions; second is farthest in the positive directions.
-constexpr [[nodiscard]] Pair<Coordinate> getMaxVeinBlockDisplacement_coordinateIndependent(const Material material, const Version version) {
+constexpr [[nodiscard]] Pair<Coordinate> getMaxVeinBlockDisplacement_coordinateIndependent(Material material, Version version) {
 	// if (version <= ExperimentalVersion::Beta_1_2_through_Beta_1_5_02) throw std::invalid_argument("Invalid version provided.");
 	double veinSize = static_cast<double>(getVeinSize(material, version));
 	/* In 1.7.9, the maximum interpoland is 1.; in 1.8.9, it's 1. - 1./veinSize.*/
@@ -376,7 +465,7 @@ constexpr [[nodiscard]] Pair<Coordinate> getMaxVeinBlockDisplacement_coordinateI
 }
 
 // The dimensions of the largest possible vein.
-constexpr [[nodiscard]] Coordinate getMaxVeinDimensions(const Material material, const Version version, const Coordinate &generationPoint) {
+constexpr [[nodiscard]] Coordinate getMaxVeinDimensions(Material material, Version version, const Coordinate &generationPoint) {
 	Pair<Coordinate> maxVeinDisplacement = getMaxVeinBlockDisplacement(material, version, generationPoint);
 	return Coordinate(
 		maxVeinDisplacement.second.x - maxVeinDisplacement.first.x + 1,
@@ -386,7 +475,7 @@ constexpr [[nodiscard]] Coordinate getMaxVeinDimensions(const Material material,
 };
 
 // The dimensions of the largest possible vein, *excluding the Beta 1.5.02- bug*.
-constexpr [[nodiscard]] Coordinate getMaxVeinDimensions_coordinateIndependent(const Material material, const Version version) {
+constexpr [[nodiscard]] Coordinate getMaxVeinDimensions_coordinateIndependent(Material material, Version version) {
 	Pair<Coordinate> maxVeinDisplacement = getMaxVeinBlockDisplacement_coordinateIndependent(material, version);
 	return Coordinate(
 		maxVeinDisplacement.second.x - maxVeinDisplacement.first.x + 1,
@@ -396,7 +485,7 @@ constexpr [[nodiscard]] Coordinate getMaxVeinDimensions_coordinateIndependent(co
 };
 
 // 
-constexpr [[nodiscard]] Pair<Coordinate> getVeinGenerationPointBoundingBox(const Pair<Coordinate> &veinOnlyBoundingBox, const Coordinate &veinOnlyCoordinate, const Material material, const Version version) {
+constexpr [[nodiscard]] Pair<Coordinate> getVeinGenerationPointBoundingBox(const Pair<Coordinate> &veinOnlyBoundingBox, const Coordinate &veinOnlyCoordinate, Material material, Version version) {
 	double veinSize = static_cast<double>(getVeinSize(material, version));
 	InclusiveRange<int32_t> veinYRange = getVeinYRange(material, version);
 	Pair<Coordinate> maxDisplacement = getMaxVeinBlockDisplacement_coordinateIndependent(material, version);
@@ -421,7 +510,7 @@ constexpr [[nodiscard]] Pair<Coordinate> getVeinGenerationPointBoundingBox(const
 }
 
 // Returns the range of multiples for which the 
-constexpr [[nodiscard]] Pair<InclusiveRange<int32_t>> getAngleIndexRanges(const Material material, const Version version) {
+constexpr [[nodiscard]] Pair<InclusiveRange<int32_t>> getAngleIndexRanges(Material material, Version version) {
 	// if (version <= ExperimentalVersion::Beta_1_2_through_Beta_1_5_02) throw std::invalid_argument("Invalid version provided.");
 	int32_t veinSize = getVeinSize(material, version);
 	Coordinate maxVeinDimensions = getMaxVeinDimensions_coordinateIndependent(material, version);
