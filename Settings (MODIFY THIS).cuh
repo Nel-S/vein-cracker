@@ -24,12 +24,12 @@ constexpr uint64_t WORKERS_PER_BLOCK = 256;
 /* To speed up the program, states are run through a series of filters that gradually decrease the list of candidates.
    This is the maximum number of results to store per each filter.*/
 constexpr uint64_t MAX_RESULTS_PER_FILTER = 200000000;
-/* If true, will beginning checking ...
+/* If true, will beginning checking from the middle of the vein's range of possible Y-values.
    The program will be more likely to return results sooner, but it may also run slower.*/
 constexpr bool START_IN_MIDDLE_OF_RANGE = false;
 /* How frequently to print status updates.
    Disabled if set to zero.*/
-constexpr std::chrono::seconds STATUS_FREQUENCY = std::chrono::seconds(30);
+constexpr std::chrono::seconds STATUS_FREQUENCY = std::chrono::seconds(120);
 // const char *FILEPATH = "structure_seeds.txt";
 
 // ~~~~~~~~

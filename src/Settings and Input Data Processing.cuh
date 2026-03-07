@@ -215,11 +215,8 @@ constexpr [[nodiscard]] Pair<InclusiveRange<float>> getAngleBounds() {
 }
 
 __device__ constexpr Pair<InclusiveRange<float>> ANGLE_BOUNDS = getAngleBounds();
-// __device__ constexpr Pair<InclusiveRange<float>> ANGLE_BOUNDS = {{0.f, 0.5f}, {0.5f, 1.f}};
 static_assert(ANGLE_BOUNDS.first.lowerBound <= ANGLE_BOUNDS.second.upperBound, "Error: Data results in impossible angle bounds for the x-direction.");
 static_assert(ANGLE_BOUNDS.first.upperBound <= ANGLE_BOUNDS.second.lowerBound, "Error: Data results in impossible angle bounds for the z-direction.");
-
-
 
 // TODO: Generalize for triangular distributions, and for when upperBound-lowerBound is not a power of two
 constexpr uint32_t BITS_LEFT_AFTER_Y = getNumberOfTrailingZeroes(LCG::MASK + 1) - getNumberOfTrailingZeroes(VEIN_RANGE.upperBound - VEIN_RANGE.lowerBound);
@@ -230,6 +227,8 @@ constexpr uint64_t GLOBAL_ITERATIONS_NEEDED = TOTAL_ITERATIONS - ITERATION_PARTS
 constexpr uint64_t ACTUAL_STORAGE_CAPACITY = constexprMin(MAX_RESULTS_PER_FILTER, WORKERS_PER_DEVICE);
 __device__ uint64_t STORAGE_ARRAY[ACTUAL_STORAGE_CAPACITY];
 __managed__ size_t storageArraySize = 0;
+// __device__ uint64_t STORAGE_ARRAY_2[ACTUAL_STORAGE_CAPACITY];
+// __managed__ size_t storageArray2Size = 0;
 
 
 struct EstimatedResults {

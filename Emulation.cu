@@ -22,6 +22,7 @@ constexpr InclusiveRange<int32_t> VEIN_RANGE = getVeinYRange(MATERIAL, VERSION);
 constexpr Pair<Coordinate> MAX_VEIN_DISPLACEMENT = getMaxVeinBlockDisplacement_coordinateIndependent(MATERIAL, VERSION);
 constexpr Coordinate MAX_VEIN_DIMENSIONS = getMaxVeinDimensions_coordinateIndependent(MATERIAL, VERSION);
 constexpr bool VEIN_USES_TRIANGULAR_DISTRIBUTION = veinUsesTriangularDistribution(MATERIAL, VERSION);
+// constexpr InclusiveRange<int32_t> VEIN_ADVANCEMENTS_RANGE = getVeinAdvancementsRange(MATERIAL, VERSION);
 
 std::unordered_set<Coordinate, CoordinateHashFunction> emulateVeinRaw_1_12_2_Minus(const Pair<int32_t> &chunk, Random &random, VeinStates vein[MAX_VEIN_DIMENSIONS.y][MAX_VEIN_DIMENSIONS.z][MAX_VEIN_DIMENSIONS.x], Coordinate &veinCoordinate) {
 	if (!vein) throw std::invalid_argument("Null pointer provided for vein.\n");

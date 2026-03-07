@@ -178,5 +178,6 @@ enum ExperimentalBiome {
 #include "Test Data/Beta 1.6.cuh"
 #include "Test Data/1.7.9.cuh"
 #include "Test Data/1.8.9.cuh"
+#include "Test Data/1.21.cuh"
 
 #endif

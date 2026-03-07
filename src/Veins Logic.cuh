@@ -289,6 +289,26 @@ constexpr [[nodiscard]] bool veinUsesTriangularDistribution(const Material mater
 	}
 }
 
+// Only confirmed for 1.12.2-
+constexpr [[nodiscard]] InclusiveRange<int32_t> getVeinAdvancementsRange(const Material material, const Version version) {
+	int32_t veinSize = getVeinSize(material, version);
+	InclusiveRange<int32_t> veinYRange = getVeinYRange(material, version);
+	bool isTriangularDistribution = veinUsesTriangularDistribution(material, version);
+
+	InclusiveRange<int32_t> advancementsCount = 
+		1                              // nextInt(16)
+		+ 1 + isTriangularDistribution // Triangular: nextInt(upper), nextInt(upper). Uniform: nextInt(upper - lower)
+		+ 1                            // nextInt(16)
+		+ 1                            // nextFloat()
+		+ 2                            // 2 nextInt(3)s
+		+ 2*veinSize;                  // [veinSize] nextDouble()s
+		// Untested. But if a maximum of 7 extra advancements can occur in nextInt(2) nextInt(3) ... nextInt(16641),
+		//	it's extremely likely perhaps 2 extra advancements at most can occur across just 4 non-power-of-two nextInts.
+		// TODO: derive exact value
+		advancementsCount.upperBound += 2;
+		return advancementsCount;
+}
+
 /* Represents 1 - 1/2^53.
    However, it is not exactly equal because multiple calculations would otherwise lose precision and return 1.,
     which would defeat the purpose.*/

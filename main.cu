@@ -28,7 +28,7 @@ void deviceManager(int32_t deviceIndex) {
 
 			// If *too many* results were returned, warn and truncate
 			if (storageArraySize > ACTUAL_STORAGE_CAPACITY) {
-				fprintf(stderr, "WARNING: Iteration %" PRIu64  " on chunk %zd returned %" PRIu64 " more results than the storage array can hold. Discarding the extras. (In future, increase MAX_RESULTS_PER_FILTER or decrease WORKERS_PER_DEVICE.)\n", currentIteration, currentChunkToTest, storageArraySize - ACTUAL_STORAGE_CAPACITY);
+				fprintf(stderr, "WARNING: Iteration %" PRIu64 " on chunk %zd returned %" PRIu64 " more results than the storage array can hold. Discarding the extras. (In future, increase MAX_RESULTS_PER_FILTER or decrease WORKERS_PER_DEVICE.)\n", currentIteration, currentChunkToTest, storageArraySize - ACTUAL_STORAGE_CAPACITY);
 				storageArraySize = ACTUAL_STORAGE_CAPACITY;
 			}
 			// Call filter 2

@@ -147,6 +147,10 @@ __host__ __device__ [[nodiscard]] constexpr double constexprArccos(double x) {
 __host__ __device__ [[nodiscard]] constexpr uint64_t twoToThePowerOf(uint32_t bits) noexcept {
 	return UINT64_C(1) << bits;
 }
+// Returns whether value is a power of two.
+__host__ __device__ [[nodiscard]] constexpr bool isPowerOfTwo(uint64_t value) noexcept {
+	return !(value & (value - 1));
+}
 // Returns a [bits]-bit-wide mask.
 __host__ __device__  [[nodiscard]] constexpr uint64_t getBitmask(uint32_t bits) noexcept {
 	return twoToThePowerOf(bits) - UINT64_C(1);
@@ -215,13 +219,13 @@ void transferEntries(const T *source, T *destination, size_t numberOfEntries) {
 	// If source and destination have same address, they're already the same
 	if (source == destination) return;
 	// Otherwise:
-	#if CUDA_IS_PRESENT
+	#ifdef CUDA_VERSION
 		// TODO: This is failing to transfer the results properly, causing all printed entries to be 0. Why?
 		// TODO: Maybe only print here if Structure_Seeds etc. are disabled; otherwise bundle/derive vein seeds with structure seeds/worldseeds at later print
 		TRY_CUDA(cudaMemcpy(destination, source, numberOfEntries*sizeof(*source), cudaMemcpyKind::cudaMemcpyDefault));
 		TRY_CUDA(cudaGetLastError());
 	#else
-		if (!memcpy(destination, source, numberOfEntries*sizeof(*source))) ABORT("ERROR: Failed to copy %zd elements.\n", numberOfEntries*sizeof(*source));
+		if (!memcpy(destination, source, numberOfEntries*sizeof(*source))) RAISE_EXCEPTION_OR_QUIT("ERROR: Failed to copy %zd elements.\n", numberOfEntries*sizeof(*source));
 	#endif
 }
 
