@@ -1,5 +1,5 @@
-#ifndef __PRNG_CUH
-#define __PRNG_CUH
+#ifndef VEIN_CRACKER_PRNG_CUH
+#define VEIN_CRACKER_PRNG_CUH
 
 #include "Base Logic.cuh"
 #include <set>

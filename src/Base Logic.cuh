@@ -1,5 +1,5 @@
-#ifndef __BASE_CUH
-#define __BASE_CUH
+#ifndef VEIN_CRACKER_BASE_LOGIC_CUH
+#define VEIN_CRACKER_BASE_LOGIC_CUH
 
 #include "../core/C-C++-CUDA Support.h"
 #include <set>
@@ -24,9 +24,9 @@ __host__ __device__ [[nodiscard]] constexpr const T &constexprMax(const T &a, co
 // TODO: Create backup for std::move in case it isn't constexpr on a device?
 template<class T>
 __host__ __device__ constexpr void constexprSwap(T &first, T &second) noexcept {
-	auto __temp = std::move(first);
+	auto temporary = std::move(first);
 	first = std::move(second);
-	second = std::move(__temp);
+	second = std::move(temporary);
 }
 
 // Returns the compile-time floor of a real number.

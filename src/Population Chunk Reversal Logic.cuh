@@ -1,5 +1,5 @@
-#ifndef __CHUNK_RANDOM_REVERSAL_CUH
-#define __CHUNK_RANDOM_REVERSAL_CUH
+#ifndef VEIN_CRACKER_POPULATION_CHUNK_RANDOM_REVERSAL_CUH
+#define VEIN_CRACKER_POPULATION_CHUNK_RANDOM_REVERSAL_CUH
 
 #include "Settings and Input Data Processing.cuh"
 #include <set>

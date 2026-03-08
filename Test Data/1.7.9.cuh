@@ -3,14 +3,16 @@
 // Internal state: ?? in chunk (?, ?)
 // Structure seed: ?? (with ?? advancements)
 // From the Flag on a Mountain seed
-__device__ constexpr InputData TEST_DATA_1_7_9__1 = {
+__device__ constexpr InputData TEST_DATA_1_7_9_NO1 = {
 	Version::v1_7_9,
 	Material::Dirt,
 	{2 + (-150 - 14), 78 + (93 - 91), 16 + (143 - 36)},
+	// The (x, y, z) dimensions of the input layout.
+	{5, 9, 9},
 	// The default state outside of the input layout.
 	VeinStates::Unknown,
 };
-constexpr VeinStates TEST_DATA_1_7_9__1_LAYOUT[][9][5] = {
+constexpr VeinStates TEST_DATA_1_7_9_NO1_LAYOUT[][9][5] = {
 	{ // -y
 		// -x          +x
 		{u, u, u, u, u}, // -z

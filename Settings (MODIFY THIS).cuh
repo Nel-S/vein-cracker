@@ -1,13 +1,13 @@
-#ifndef __SETTINGS_CUH
-#define __SETTINGS_CUH
+#ifndef VEIN_CRACKER_SETTINGS_CUH
+#define VEIN_CRACKER_SETTINGS_CUH
 
 /* To find what options are valid for the following settings, see the following file:*/
 #include "Allowed Values for Settings.cuh"
 #include <chrono>
 
 // The data to run the program on.
-#define INPUT_DATA TEST_DATA_1_8_9__1
-#define INPUT_DATA_LAYOUT TEST_DATA_1_8_9__1_LAYOUT
+#define INPUT_DATA TEST_DATA_1_8_9_NO1
+#define INPUT_DATA_LAYOUT TEST_DATA_1_8_9_NO1_LAYOUT
 
 /* The number of "parts" this program should be broken up into, for usage by PART_TO_START_FROM.*/
 constexpr uint64_t NUMBER_OF_PARTS = 1;

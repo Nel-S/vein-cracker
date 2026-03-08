@@ -1,5 +1,5 @@
-#ifndef __VEINS_CUH
-#define __VEINS_CUH
+#ifndef VEIN_CRACKER_VEINS_CUH
+#define VEIN_CRACKER_VEINS_CUH
 
 #include "PRNG Logic.cuh"
 #include "../Allowed Values for Settings.cuh"
@@ -606,6 +606,61 @@ constexpr [[nodiscard]] Pair<InclusiveRange<int32_t>> getAngleIndexRanges(Materi
 	return {leftIndices, rightIndices};
 }
 
+
+// // The ranges of angles that could possibly generate the vein with the dimensions it has.
+// constexpr [[nodiscard]] Pair<InclusiveRange<float>> getAngleBounds_Old(Material material, Version version) {
+// 	InclusiveRange<float> lower(0.f, 0.5f), upper(0.5f, 1.f);
+// 	int32_t veinSize = getVeinSize(material, version);
+// 	// No angle filtering is possible for vein sizes <= 3
+// 	// TODO: Calculations haven't been done for Beta 1.5.02- generation
+// 	if (veinSize <= 3 || version <= ExperimentalVersion::Beta_1_2_through_Beta_1_5_02) return {lower, upper};
+// 	// TODO: Angle filtering for 1.8+ size=4 veins must be a special case (getAngleIndexRanges doesn't currently support it).
+// 	// This is a temporary patch.
+// 	if (version >= Version::v1_8_through_v1_9_4 && veinSize == 4) return {lower, upper};
+
+// 	Coordinate maxVeinDimensions = getMaxVeinDimensions_coordinateIndependent(material, version);
+// 	constexpr Pair<InclusiveRange<int32_t>> ANGLE_INDEX_RANGES = getAngleIndexRanges(INPUT_DATA.material, INPUT_DATA.version);
+	
+// 	constexpr size_t TOTAL_ANGLE_INDICES = ANGLE_INDEX_RANGES.first.getRange() + ANGLE_INDEX_RANGES.second.getRange();
+// 	// TODO: Rewrite without needing an array, which can then be made input-data-independent
+// 	double changeAngles[TOTAL_ANGLE_INDICES + 1] = {};
+
+// 	// First iteration is x (sines), second is z (cosines)
+// 	for (int32_t direction = 0; direction <= 1; ++direction) {
+// 		size_t i = 0;
+// 		/* Since the */ 
+// 		for (int32_t angleIndex = ANGLE_INDEX_RANGES.first.lowerBound; angleIndex <= ANGLE_INDEX_RANGES.first.upperBound; ++angleIndex, ++i) {
+// 			changeAngles[i] = (direction ? constexprArccos : constexprArcsin)(
+// 				(
+// 					(
+// 						constexprSin(
+// 							(1 - static_cast<double>(Version::v1_8_through_v1_9_4 <= version)/veinSize)*PI
+// 						) + 1.
+// 					)*veinSize/4.*MAX_DOUBLE_IN_RANGE + 4. + 8.*angleIndex
+// 				)/(
+// 					2.*static_cast<double>(Version::v1_8_through_v1_9_4 <= version) - veinSize
+// 				)
+// 			)/PI;
+// 		}
+// 		for (int32_t angleIndex = ANGLE_INDEX_RANGES.second.lowerBound; angleIndex <= ANGLE_INDEX_RANGES.second.upperBound; ++angleIndex, ++i) {
+// 			changeAngles[i] = (direction ? constexprArccos : constexprArcsin)(
+// 				-MAX_DOUBLE_IN_RANGE/4. - 4./veinSize*(1. - 2.*angleIndex)
+// 			)/PI;
+// 		}
+// 		changeAngles[TOTAL_ANGLE_INDICES] = 0.5*direction;
+// 		constexprOrder(changeAngles, TOTAL_ANGLE_INDICES + 1, !direction);
+
+// 		double chosenAngle = changeAngles[constexprMin(
+// 			direction ? maxVeinDimensions.z - KNOWN_VEIN_INPUT_DIMENSIONS.z : maxVeinDimensions.x - KNOWN_VEIN_INPUT_DIMENSIONS.x,
+// 			static_cast<int32_t>(TOTAL_ANGLE_INDICES)
+// 		)];
+// 		(direction ? lower.upperBound : lower.lowerBound) = static_cast<float>(chosenAngle);
+// 		(direction ? upper.lowerBound : upper.upperBound) = static_cast<float>(1. - chosenAngle);
+// 	}
+
+// 	return {lower, upper};
+// }
+
 // The ranges of angles that could possibly generate a vein with the dimensions it has.
 // (This could use more testing.)
 constexpr [[nodiscard]] Pair<InclusiveRange<float>> getAngleBounds(Material material, Version version, const Coordinate &knownVeinDimensions) {
@@ -674,5 +729,7 @@ constexpr [[nodiscard]] Pair<InclusiveRange<float>> getAngleBounds(Material mate
 
 	return {lower, upper};
 }
+
+
 
 #endif

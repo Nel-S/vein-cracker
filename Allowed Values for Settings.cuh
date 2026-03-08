@@ -1,5 +1,5 @@
-#ifndef __ALLOWED_VALUES_FOR_SETTINGS_CUH
-#define __ALLOWED_VALUES_FOR_SETTINGS_CUH
+#ifndef VEIN_CRACKER_ALLOWED_VALUES_FOR_SETTINGS_CUH
+#define VEIN_CRACKER_ALLOWED_VALUES_FOR_SETTINGS_CUH
 
 #include "src/Base Logic.cuh"
 
@@ -90,7 +90,7 @@ struct InputData {
 	Version version;
 	Material material;
 	// Biome biome;
-	Coordinate coordinate;
+	Coordinate coordinate, layoutDimensions;
 	VeinStates defaultStateOutsideLayout;
 
 	// constexpr InputData() : version(), material(), biome(), coordinate() {}

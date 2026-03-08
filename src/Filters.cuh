@@ -1,5 +1,5 @@
-#ifndef __FILTERS_CUH
-#define __FILTERS_CUH
+#ifndef VEIN_CRACKER_FILTERS_CUH
+#define VEIN_CRACKER_FILTERS_CUH
 
 #include "Settings and Input Data Processing.cuh"
 
@@ -62,10 +62,10 @@ __global__ void filter2(const size_t chunkIndex) {
 		16*CHUNKS_TO_EXAMINE.coordinates[chunkIndex].second + 8*USE_POPULATION_OFFSET + generationPointZOffset
 	};
 	// Initialize emulated vein
-	VeinStates currentVein[INPUT_DIMENSIONS.y][INPUT_DIMENSIONS.z][INPUT_DIMENSIONS.x];
-	for (int32_t y = 0; y < INPUT_DIMENSIONS.y; ++y) {
-		for (int32_t z = 0; z < INPUT_DIMENSIONS.z; ++z) {
-			for (int32_t x = 0; x < INPUT_DIMENSIONS.x; ++x) currentVein[y][z][x] = VeinStates::Background;
+	VeinStates currentVein[INPUT_DATA.layoutDimensions.y][INPUT_DATA.layoutDimensions.z][INPUT_DATA.layoutDimensions.x];
+	for (int32_t y = 0; y < INPUT_DATA.layoutDimensions.y; ++y) {
+		for (int32_t z = 0; z < INPUT_DATA.layoutDimensions.z; ++z) {
+			for (int32_t x = 0; x < INPUT_DATA.layoutDimensions.x; ++x) currentVein[y][z][x] = VeinStates::Background;
 		}
 	}
 
@@ -107,7 +107,7 @@ __global__ void filter2(const size_t chunkIndex) {
 					int32_t yIndex = y - INPUT_DATA.coordinate.y;
 					int32_t zIndex = z - INPUT_DATA.coordinate.z;
 					// If that coordinate would fall outside the layout's bounds:
-					if (xIndex < 0 || INPUT_DIMENSIONS.x <= xIndex || yIndex < 0 || INPUT_DIMENSIONS.y <= yIndex || zIndex < 0 || INPUT_DIMENSIONS.z <= zIndex) {
+					if (xIndex < 0 || INPUT_DATA.layoutDimensions.x <= xIndex || yIndex < 0 || INPUT_DATA.layoutDimensions.y <= yIndex || zIndex < 0 || INPUT_DATA.layoutDimensions.z <= zIndex) {
 						// Quit if acting as stone, otherwise ignore (if treating as unknown)
 						if (INPUT_DATA.defaultStateOutsideLayout == VeinStates::Background) return;
 					} else {
@@ -122,9 +122,9 @@ __global__ void filter2(const size_t chunkIndex) {
 	}
 
 	// Make sure current vein and input vein are identical, and abort if not
-	for (int32_t y = 0; y < INPUT_DIMENSIONS.y; ++y) {
-		for (int32_t z = 0; z < INPUT_DIMENSIONS.z; ++z) {
-			for (int32_t x = 0; x < INPUT_DIMENSIONS.x; ++x) {
+	for (int32_t y = 0; y < INPUT_DATA.layoutDimensions.y; ++y) {
+		for (int32_t z = 0; z < INPUT_DATA.layoutDimensions.z; ++z) {
+			for (int32_t x = 0; x < INPUT_DATA.layoutDimensions.x; ++x) {
 				if (inputLayoutCopy.copy[y][z][x] != VeinStates::Unknown && inputLayoutCopy.copy[y][z][x] != currentVein[y][z][x]) return;
 			}
 		}
