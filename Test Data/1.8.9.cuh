@@ -99,7 +99,6 @@ __device__ constexpr InputData TEST_DATA_1_8_9__2 = {
 	// The default state outside of the input layout.
 	VeinStates::Stone,
 };
-
 constexpr VeinStates TEST_DATA_1_8_9__2_LAYOUT[][10][6] = {
 	{
 		{_, _, _, _, _, _},

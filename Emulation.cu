@@ -130,7 +130,7 @@ std::unordered_set<Coordinate, CoordinateHashFunction> emulateVeinCleaned_1_12_2
 	double maxZ = cos(angle)*static_cast<double>(VEIN_SIZE)/8.;
 	for (int32_t k = 0; k < VEIN_SIZE + (VERSION <= Version::v1_7_2_through_v1_7_10); ++k) {
 		double interpoland = static_cast<double>(k)/static_cast<double>(VEIN_SIZE);
-		// Linearly interpolates between -sin(f)*VEIN_SIZE/8. and sin(f)*VEIN_SIZE/8.; y1 and y2; and -cos(f)*VEIN_SIZE/8. and sin(f)*VEIN_SIZE/8..
+		// Linearly interpolates between -sin(f)*VEIN_SIZE/8. and sin(f)*VEIN_SIZE/8.; y1 and y2; and -cos(f)*VEIN_SIZE/8. and cos(f)*VEIN_SIZE/8..
 		double xInterpolation = static_cast<double>(veinGenerationPoint.x) + maxX*(1. - 2.*interpoland);
 		double yInterpolation = static_cast<double>(veinGenerationPoint.y) + static_cast<double>(y1) + static_cast<double>(y2 - y1) * interpoland + (VERSION <= Version::Beta_1_6_through_Beta_1_7_3 ? 2 : -2);
 		double zInterpolation = static_cast<double>(veinGenerationPoint.z) + maxZ*(1. - 2.*interpoland);

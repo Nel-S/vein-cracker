@@ -17,7 +17,7 @@ constexpr uint64_t PART_TO_START_FROM = 1;
 // The number of devices (GPUs) to run this program on.
 constexpr int32_t NUMBER_OF_DEVICES = 1;
 // The number of worker threads per device.
-constexpr uint64_t WORKERS_PER_DEVICE = 1ULL << 32;
+constexpr uint64_t WORKERS_PER_DEVICE = UINT64_C(1) << 32;
 // The number of workers per device block.
 constexpr uint64_t WORKERS_PER_BLOCK = 256;
 

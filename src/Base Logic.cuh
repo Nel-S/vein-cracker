@@ -192,14 +192,15 @@ __host__ __device__ [[nodiscard]] constexpr uint32_t getNumberOfOnesIn(uint32_t 
 /* ===============
    ARRAY FUNCTIONS
    =============== */
+// TODO: Possibly overload methods with std::unique_ptr/std::shared_ptr parameters?
 
 /* Orders the elements of an array in compile-time.
    TODO: Replace with Quicksort*/
 template <class T>
-constexpr void constexprOrder(T *array, size_t numberOfEntries, bool reverse = false) {
+constexpr void constexprOrder(T *const array, size_t numberOfEntries, bool descending = false) {
 	for (size_t i = 0; i < numberOfEntries - 1; ++i) {
 		for (size_t j = i + 1; j < numberOfEntries; ++j) {
-			if (reverse ? array[i] < array[j] : array[j] < array[i]) constexprSwap(array[i], array[j]);
+			if (descending ? array[i] < array[j] : array[j] < array[i]) constexprSwap(array[i], array[j]);
 		}
 	}
 }
@@ -231,7 +232,7 @@ void transferEntries(const T *source, T *destination, size_t numberOfEntries) {
 
 // Removes duplicates from an array, and also orders its elements.
 template <class T>
-void removeDuplicatesAndOrder(T *array, size_t *numberOfEntries) {
+void removeDuplicatesAndOrder(T *const array, size_t *const numberOfEntries) {
 	std::set<T> set;
 	for (uint64_t i = 0; i < *numberOfEntries; ++i) set.insert(array[i]);
 	*numberOfEntries = static_cast<size_t>(set.size());
@@ -239,7 +240,6 @@ void removeDuplicatesAndOrder(T *array, size_t *numberOfEntries) {
 	for (auto i = set.cbegin(); i != set.cend(); ++i) array[count++] = *i;
 	// set.clear();
 }
-
 
 /* ================
    STRING FUNCTIONS

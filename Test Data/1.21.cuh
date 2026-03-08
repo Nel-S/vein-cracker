@@ -1,5 +1,7 @@
 #include "../Allowed Values for Settings.cuh"
 
+// Internal state: ?? in chunk (?, ?)
+// Structure seed: ?? (with ?? advancements)
 __device__ constexpr InputData TEST_DATA_1_21__1 = {
 	static_cast<Version>(ExperimentalVersion::v1_16_5), // Actually 1.21, but that's not a version
 	Material::Coal,
@@ -7,9 +9,6 @@ __device__ constexpr InputData TEST_DATA_1_21__1 = {
 	// The default state outside of the input layout.
 	VeinStates::Unknown
 };
-
-// Internal state: ?? in chunk (?, ?)
-// Structure seed: ?? (with ?? advancements)
 constexpr VeinStates TEST_DATA_1_21__1_LAYOUT[][7][6] = {
 	{ // -y
 		// -x           +x
